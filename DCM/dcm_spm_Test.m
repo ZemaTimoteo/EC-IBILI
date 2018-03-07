@@ -14,7 +14,7 @@ if isempty(data_path), data_path = pwd; end
 % unzip(fullfile(data_path,'attention.zip'));
 data_path = fullfile(data_path,'attention');
 fprintf(' %30s\n', '...done');
-
+% ola
 % Initialise SPM
 %--------------------------------------------------------------------------
 spm('Defaults','fMRI');
