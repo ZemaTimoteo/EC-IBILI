@@ -1,0 +1,13 @@
+xY.name  - nome da ROI
+xY.Ic    -
+xY.Sess  - sessão
+xY.xyz   - centro da ROI, posicao xyz
+xY.def   - string que define o tipo de análise
+xY.spec  -
+xY.str   - string com a origem da imagem
+xY.XYZmm - posiçoes relativas dos voxeis selecionados
+xY.X0    -
+xY.y     - time series nos voxeis selecionados
+xY.u     - time series
+xY.v     -
+xY.s     -
