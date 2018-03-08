@@ -19,7 +19,7 @@ var         = 5;             % Number of Variables - '5' or '9'
 varComplex  = 0;             % LowCorr '1' - true; HighCorr '0' - false
 simul       = 'true';
 
-consistTest = 'true';        % if consistentency test on: 'true'
+consistTest = 'true';       % if consistentency test on: 'true'
 ratioSNR    = 200;          % Value of SNR
 plots       = 0;            % 1 - 'true', 0 ou 2 - 'false'
 cond_names  = {'simulate05','simulate250','simulateOriginal'};
@@ -78,15 +78,15 @@ mordermax   = 1;             % model order max
 if test == 1; testType = 'MVGC_'; elseif test == 3; testType = 'SSGC_';end
 if varComplex == 1; complex = 'LowCorr_'; else complex = 'HighCorr_';end
 saveName = strcat(num2str(var),'var_',complex,testType,surrogate,'_SNR',...
-            num2str(ratioSNR),'_ChannelGap',num2str(pointsVect(1)-50),...
+            num2str(ratioSNR),'a_ChannelGap',num2str(pointsVect(1)-50),...
             '-',num2str(pointsVect(end)-50),'_Morder',...
             num2str(mordermax),'.mat');
-cd('C:\Users\Documents\tiago\Documents\MATLAB\Test\IBILI\Results\Testes\MatrixResults_Test') % cd('C:\Users\admin\Documents\Tiago\IBILI\Results\Testes\MatrixResults_Test')
+cd('C:\Users\tiago\Documents\MATLAB\EC-IBILI\ResultsMatrix') % cd('C:\Users\admin\Documents\Tiago\IBILI\Results\Testes\MatrixResults_Test')
 save(saveName,'data')
-cd('C:\Users\tiago\Documents\MATLAB\Test') % cd('C:\Users\admin\Documents\Tiago\IBILI\Code\Test')
+cd('C:\Users\tiago\Documents\MATLAB\EC-IBILI') % cd('C:\Users\admin\Documents\Tiago\IBILI\Code\Test')
 
 %% ... Plots ...
-cd('C:\Users\admin\Documents\Tiago\IBILI\Code\Test')
+cd('C:\Users\tiago\Documents\MATLAB\EC-IBILI')
 set(0,'DefaultFigureVisible','on');  % all subsequent figures "off"
 F1scorePlot = 1;
 % Plot sensi, speci, F1, ACC, bACC
