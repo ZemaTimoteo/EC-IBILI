@@ -240,7 +240,8 @@ if strcmp(surrogate,'perm')
     histfit(distrib);
     line([thresh thresh],[0 20],'Color','g'); % percentil of 0.95%
     % ... applying FWE to data ...
-    if exist('ResultsSSGC') == 0 
+    testResultsSSGC = exist(ResultsSSGC);
+    if 
         ResultsSSGC.G = ResultsMVGC.F;
     end
     ResultsSSGC.G(find(ResultsSSGC.G<=thresh & ResultsSSGC.G>=-thresh)) = 0;
