@@ -115,15 +115,15 @@ failures_sur = 0;
 
 for u=1:numberTests
 
-    fprintf('\n\n   * Statistical test for Condition %s partition %d ... \n',test.cond{1},i);    
+    fprintf('\n\n   * Statistical test fo Condition %s partition %d ... \n',test.cond{1},i);    
     aux = 1;                              % defines test for condition 1
     statistical_ssgc_trs_function_vfMRI   % perform TRS
                        
     clear BOLD_data aux
 
-    fprintf('\n\n   * Statistical test for Condition %s partition %d ... \n',test.cond{2},i);
+    fprintf('\n\n   * Performing TRS for Condition %s partition %d ... \n',test.cond{2},i);
     aux = 2;                             % defines test for condition 2
-    statistical_ssgc_trs_function_vfMRI  % perform TRS
+    statistical_ssgc_trs_function_vfMRI   % perform TRS
     clear BOLD_data aux
     
 end
