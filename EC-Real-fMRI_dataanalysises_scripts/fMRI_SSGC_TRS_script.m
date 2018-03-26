@@ -16,84 +16,130 @@ set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
 path = fullfile(data.pathname , data.filename);
 data = [importdata(path)];
 
-%% ... data partitazion in conditions, blocks...
+%% ... data partitazion in conditions...
 
-numberFields = length(fieldnames(data));
-dat.nameVariab = fieldnames(data);
 dat.VOIS = data.VOIS;
+data = rmfield(data,'VOIS');
+numberFields = length(fieldnames(data));
+dat.nameCondit = fieldnames(data);
+
 for i=1:numberFields
     cond =  ['cond',num2str(i)];
-    dat.(cond) = data.(dat.nameVariab{i});
+    dat.(cond) = data.(dat.nameCondit{i});
 end
 
-clear data i
+clear data i cond numberFields
 
+%% ... Choose Conditions ...
 
+prompt = {'Condition test A','Condition test B'};
+title = 'Conditions to test';
+dims = [1 35];
+definput = {'1','2'};
+answer   = inputdlg(prompt,title,dims,definput);
 
-%% ... Inicializacao ...
+test.cond = {dat.nameCondit{str2num(answer{1})} , dat.nameCondit{str2num(answer{2})}};
+test.Data = {dat.(['cond',num2str(answer{1})]) , dat.(['cond',num2str(answer{2})])};
 
+clear answer definput dims title prompt
 
+%% ... reorganization of the data ...
 
+if length(test.Data{1}) == 960
+    
+   test111 = reshape(test.Data{1}, [10,32,30]);
+    
+    
+elseif length(test.Data{1}) == 2880 
+    % rearrangement for Data condition 1
+    a = test.Data{1}(:,1:1152);
+    b = test.Data{1}(:,1152+1:1152+864);
+    c = test.Data{1}(:,1152+864+1:1152+864+864);
 
+    test.rshapData{1,1} = reshape(a,[size(test.Data{1},1),48,24]);
+    test.rshapData{1,2} = reshape(b,[size(test.Data{1},1),36,24]);
+    test.rshapData{1,3} = reshape(c,[size(test.Data{1},1),36,24]);
+    
+    % rearrangement for Data condition 2
+    aa = test.Data{2}(:,1:1152);
+    bb = test.Data{2}(:,1152+1:1152+864);
+    cc = test.Data{2}(:,1152+864+1:1152+864+864);
 
+    test.rshapData{2,1} = reshape(aa,[size(test.Data{2},1),48,24]);
+    test.rshapData{2,2} = reshape(bb,[size(test.Data{2},1),36,24]);
+    test.rshapData{2,3} = reshape(cc,[size(test.Data{2},1),36,24]);
+end
 
-pointsVect  = [10 20 30 40 60 80 100 160 200] + 50; % 60 80 100 160 200]+50; % + 50 para excluir os primeiro 50 pontos afectados pela HRF [3000]; % [10 20 30 40 60 80 100 160 200]; % [40 80]; % [40:5:80]; % 
-blocksVect  = [ 2  4 8 13 15 17  25  30  40]; %  [ 20]; % [ 2  4  8 13 15 17  25  30  40]; % [4 25]; % 40; %
-% test        = 1;             % 1 - MVGC, 3 - SSGC, 4 - Coherence
-% surrogate   = 'perm';   % 'timeRev' - for time-reversed, 'perm' - for permutation, 'permBlock' - for permutation by blocks
-% var         = 5;             % Number of Variables - '5' or '9'
-% varComplex  = 15;             % LowCorr '1' - true; HighCorr '0' - false
-% simul       = 'true';
+clear a aa b bb c cc
+test = rmfield(test,{'Data'});
 
-% consistTest = 'true';       % if consistentency test on: 'true'
-% ratioSNR    = 1000;          % Value of SNR
-% plots       = 0;            % 1 - 'true', 0 ou 2 - 'false'
-% cond_names  = {'simulate05','simulate250','simulateOriginal'};
-% n_cond      = 3;
-% mordermax   = 1;            % model order max
+%% ... Performing SSGC ...
 
-%%
-point=1;
-while point<=size(pointsVect,2) % itterates on the number of points
-    block=1;
-    clear BOLD_Original BOLD_250 BOLD_05
+fprintf('\n\n\n   ================   SSGC  TESTING   ================   \n\n');
+numberTests = size(test.rshapData,2);
+mordermax   = 1;
+failures = 0;
 
-    while block<=size(blocksVect,2)  % itterates on the number of blocks
-        mordermax   = 1;             % model order max
-        fprintf('\n\n\n***** -> Number of points (test %d out of %d) - ',point,size(pointsVect,2));
-        fprintf(' N-blocks (test %d out of %d) ***** \n\n',block,size(blocksVect,2));
+for i=1:numberTests
 
-        %% ... Geracao de Resultados ...
-        VARDataGenerator
-        surrogate_demo_function
-        
-        %% ... Testar Resultados ...
-        % save data in new variables
-        data.z_scores{point,block} = z_scores;
-        data.values{point,block} = [pointsVect(point)-50 blocksVect(block)];
+    fprintf('\n\n   * Performing SSGC for Condition %s partition %d ... \n',test.cond{1},i);    
+    aux = 1;                              % defines test for condition 1
+    BOLD_data = test.rshapData{aux,i};    % data identification
+    SSGC_script                           % perform SSGC
+    clear BOLD_data aux
 
-        % calculate sensi & speci
-        for cond = 1:n_cond
-            [data.results.sensi{point,block}.(cond_names{cond}), ...
-             data.results.speci{point,block}.(cond_names{cond}), ...
-             data.results.Fone{point,block}.(cond_names{cond}),  ...
-             data.results.bACC{point,block}.(cond_names{cond}),  ...
-             data.results.ACC{point,block}.(cond_names{cond})]  ...             
-                            = sensi_speci_ECt(data.z_scores{point,block}.(cond_names{cond}), ...
-                              label_ec, ...
-                              nvars, ...
-                              'SSGC');
-        end
-        
-        block = block + 1;
-        
-        clearvars -except pointsVect blocksVect point block test surrogate var ...
-        simul data n_cond cond_names consistTest ratioSNR consist morder plots ...
-        varComplex
-    end
-    point = point + 1;
+    fprintf('\n\n   * Performing SSGC for Condition %s partition %d ... \n',test.cond{2},i);
+    aux = 2;                             % defines test for condition 2
+    BOLD_data = test.rshapData{aux,i};   % data identification
+    SSGC_script                          % perform SSGC
+    clear BOLD_data aux
     
 end
+%% ... Performing TRS for SSGC obtained ...
+fprintf('\n\n\n   ================ SURROGATE TESTING ================   \n\n');
+failures_sur = 0;
+
+for u=1:numberTests
+
+    fprintf('\n\n   * Performing TRS for Condition %s partition %d ... \n',test.cond{1},i);    
+    aux = 1;                              % defines test for condition 1
+    BOLD_data = test.rshapData{aux,u};    % data identification
+    surrogate_function_vfMRI              % perform TRS
+                       
+    clear BOLD_data aux
+
+    fprintf('\n\n   * Performing SSGC for Condition %s partition %d ... \n',test.cond{2},i);
+    aux = 2;                             % defines test for condition 2
+    BOLD_data = test.rshapData{aux,u};   % data identification
+    surrogate_function_vfMRI             % perform TRS
+    clear BOLD_data aux
+    
+end
+
+
+%% ... Testar Resultados ...
+% save data in new variables
+data.z_scores{point,block} = z_scores;
+data.values{point,block} = [pointsVect(point)-50 blocksVect(block)];
+
+% calculate sensi & speci
+for cond = 1:n_cond
+    [data.results.sensi{point,block}.(cond_names{cond}), ...
+        data.results.speci{point,block}.(cond_names{cond}), ...
+        data.results.Fone{point,block}.(cond_names{cond}),  ...
+        data.results.bACC{point,block}.(cond_names{cond}),  ...
+        data.results.ACC{point,block}.(cond_names{cond})]  ...
+        = sensi_speci_ECt(data.z_scores{point,block}.(cond_names{cond}), ...
+        label_ec, ...
+        nvars, ...
+        'SSGC');
+end
+
+
+clearvars -except pointsVect blocksVect point block test surrogate var ...
+    simul data n_cond cond_names consistTest ratioSNR consist morder plots ...
+    varComplex
+
 
 data.cons = consist;  % data consistency
 
