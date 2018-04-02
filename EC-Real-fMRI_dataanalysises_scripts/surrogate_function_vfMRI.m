@@ -42,6 +42,7 @@ for blo = 1:nblocks
         
         % b) buildng GC for surrugate
         Results.G_AllSubs_FDR_sur{aux,i}(:,:,blo)   = iss_PWGC(A_sur,C_sur,K_sur,V_sur); % valores de surrogate GC state-space
+        Results.Morder_sur{aux,i}                   = m_sur;
         clear m_sur A_sur C_sur K_sur V_sur z_sur e_sur pf X_sur
     catch
         disp('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SSGC failed - Surrogate')

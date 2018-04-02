@@ -63,7 +63,7 @@ brainConnectROIs(coords((to_count~=0),:), regionTag(to_count~=0), to_count(to_co
 
 
 %% Causal connections
-brainConnect(coords, regionTag, roiSize, connStrength, showLabels,'connectivity all subs all conds', exportBrain );
+% brainConnect(coords, regionTag, roiSize, connStrength, showLabels,'connectivity all subs all conds', exportBrain );
 
 %% Graph Theory
 

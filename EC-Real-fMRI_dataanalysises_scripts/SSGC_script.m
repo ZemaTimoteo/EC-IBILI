@@ -29,6 +29,7 @@
                 Results.G_AllSubs_FDR{aux,i}(:,:,blo)  = ResultsSSGC.G;
                 Results.consist{aux,i}(blo)            = ResultsSSGC.cons;
                 test.rshapData{aux,i}(:,:,blo)         = BOLD_dataNorm;  % save data normalized
+                ResultsSSGC.Morder{aux,i}              = ResultsSSGC.morder;
                 clear ResultsSSGC BOLD_dataNorm
             catch ME
                 disp('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SSGC failed')

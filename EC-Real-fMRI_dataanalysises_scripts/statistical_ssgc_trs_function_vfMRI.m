@@ -29,8 +29,10 @@ if strcmp(tRev,'1')
 end
 
 if strcmp(tRev,'2')
-    % ... Paired t-test for all channels ...
-    [h,p,ci,stats] = ttest(Results.G_AllSubs_FDR{aux,v},Results.G_AllSubs_FDR_sur{aux,v},0.05,'both',3);
+    % ... Paired t-test for all channels ...    
+    cat_G_AllSubs     = cat(3,Results.G_AllSubs_FDR{aux,v});
+    cat_G_AllSubs_sur = cat(3,Results.G_AllSubs_FDR_sur{aux,v});    
+    [h,p,ci,stats]    = ttest(cat_G_AllSubs,cat_G_AllSubs_sur,alpha,'both',3);
     
     % ... Family-wise Errors correction ...
     if strcmp(mth,'FDR') % FDR
@@ -65,6 +67,15 @@ if strcmp(tRev,'2')
     end
     
     % ... save z-scores ...
-    Results.z_scores{aux,u} = z_scor;
+    Results.z_scores{aux,v} = z_scor;
     
 end
+
+test.stat.tRev      = tRev;                   % '1' - only the MVGC statistics, '2' - only the paired t-test, 'both' - both tests
+test.stat.graph1    = graph1;
+test.stat.FWE       = FWE;                 % Perform FWE - 'true' or 'false'
+test.stat.nhyp      = nhyp;    % number of hypothesis
+test.stat.alpha     = alpha;
+test.stat.mth       = mth;                  % FWE method - 'bonf' Bonferroni, - 'FDR' FDR
+
+clear tRev graph1 FWE nhyp alpha mth str stop plots
