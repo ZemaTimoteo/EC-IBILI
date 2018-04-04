@@ -66,8 +66,8 @@ if length(test.Data{1}) == 960
         % - randomize subjects
     test.Data{1} = reshape(test.Data{1},[size(test.Data{1},1),96,10]);
     [~,~,s] = size(test.Data{1});
-    test.shuffl1  = randperm(s) ;
-    test.Data{1}(:,:,test.shuffl1) = test.Data{1}(:,:,:);
+    test.shuffl  = randperm(s) ;
+    test.Data{1}(:,:,test.shuffl) = test.Data{1}(:,:,:);
     test.Data{1} = reshape(test.Data{1},[size(test.Data{1},1),960,1]);
         % - rearrangement of data
     test.rshapData{1,1} = reshape(test.Data{1},[size(test.Data{1},1),48,20]);
@@ -75,9 +75,7 @@ if length(test.Data{1}) == 960
     % Data condition 2
         % - randomize subjects
     test.Data{2} = reshape(test.Data{2},[size(test.Data{2},1),96,10]);
-    [~,~,ss] = size(test.Data{2});
-    test.shuffl2  = randperm(ss) ;
-    test.Data{2}(:,:,test.shuffl2) = test.Data{2}(:,:,:);
+    test.Data{2}(:,:,test.shuffl) = test.Data{2}(:,:,:);
     test.Data{2} = reshape(test.Data{2},[size(test.Data{1},1),960,1]);
         % rearrangement of data 
     test.rshapData{2,1} = reshape(test.Data{2},[size(test.Data{2},1),48,20]);
@@ -87,8 +85,8 @@ elseif length(test.Data{1}) == 2880
             % - randomize subjects
     test.Data{1} = reshape(test.Data{1},[size(test.Data{1},1),288,10]);
     [~,~,s] = size(test.Data{1});
-    test.shuffl1  = randperm(s) ;
-    test.Data{1}(:,:,test.shuffl1) = test.Data{1}(:,:,:);
+    test.shuffl  = randperm(s);
+    test.Data{1}(:,:,test.shuffl) = test.Data{1}(:,:,:);
     test.Data{1} = reshape(test.Data{1},[size(test.Data{1},1),2880,1]);
     
             % - rearrangement of data   
@@ -103,9 +101,7 @@ elseif length(test.Data{1}) == 2880
     % Data condition 2
                 % - randomize subjects
     test.Data{2} = reshape(test.Data{2},[size(test.Data{2},1),288,10]);
-    [~,~,ss] = size(test.Data{2});
-    test.shuffl2  = randperm(ss) ;
-    test.Data{2}(:,:,test.shuffl2) = test.Data{2}(:,:,:);
+    test.Data{2}(:,:,test.shuffl) = test.Data{2}(:,:,:);
     test.Data{2} = reshape(test.Data{2},[size(test.Data{1},1),2880,1]);
     
     

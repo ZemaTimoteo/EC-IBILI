@@ -1,7 +1,7 @@
   
 %% =============================================================================================================
 
-% ---- PLOT OF THE Statistical Validation over the SSGC data by TRS - using t-test ------------
+% ---- PLOT OF THE multiShuffle Statistical Validation over the SSGC data by TRS - using t-test ------------
 
 
 figure()
@@ -13,10 +13,15 @@ for j=1:nodes
 end
 % nodesNames(2,:) = '    ';
 
+
+% define max value for axis label
+ConcatSignif = [signifResults{1,1}; signifResults{1,2}];
+maxValue = max(max(ConcatSignif));
+
 % ... plot the z_scores
-for o=1:numberTests
-    subplot(1,numberTests,o)
-    imagesc (Results.z_scores{aux,o})
+for o=1:2
+    subplot(1,2,o)
+    imagesc (signifResults{1,o})
     colorbar
     
     title(strcat('Data Partition-',string(o)))
@@ -26,7 +31,7 @@ for o=1:numberTests
     set(gca,'XTickLabel',nodesNames)
     set(gca,'YTickLabel',nodesNames)
     ax = gca; ax.XTickLabelRotation = 45; %['   ';'';'   ';'';'   ';'';'   ';'';'   ']
-    caxis([-.05 2.55]);
+    caxis([-.05 maxValue]);
 end
 
 
