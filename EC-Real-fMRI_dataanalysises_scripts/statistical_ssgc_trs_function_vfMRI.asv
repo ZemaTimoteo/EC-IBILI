@@ -71,14 +71,14 @@ if strcmp(tRev,'2')
         sigma    = 1;
         prob     = tcdf(stats.tstat,stats.df(1,2));     % CDF of the Students t-distribution with df degrees of freedom
         z_scor   = norminv(prob,mu,sigma);              % Inverse cdf of the univariate standard normal distribution
-%         [blo,j]  = find(z_scor == Inf);
-%         infinit  = find(z_scor == Inf);
+        [blo,j]  = find(z_scor == Inf);
+        infinit  = find(z_scor == Inf);
         
         z = @(p) -sqrt(2) * erfcinv(p*2);
         cval = z(1-alpha); % critical value - z-value corrected for FWE
         z_scor(find(abs(z_scor)<cval)) = 0;
         
-        clear mu sigma prob cval
+        clear mu sigma prob z_scor  blo j infinit z cval
     end
     
     % ... Plot with FWE correction ...
@@ -92,7 +92,7 @@ if strcmp(tRev,'2')
     end
     
     % ... save z-scores ...
-    Results.z_scores{aux,v} = abs(z_scor);
+    Results.z_scores{aux,v} = z_scor;
     
 end
 

@@ -11,11 +11,11 @@ auxNames = char(dat.VOISInterst);
 for j=1:nodes
     nodesNames(j*2+1,:) = auxNames(j,:);
 end
-nodesNames(2,:) = '    ';
+% nodesNames(2,:) = '    ';
 
 % ... plot the z_scores
 for o=1:numberTests
-    subplot(1,3,o)
+    subplot(1,numberTests,o)
     imagesc (Results.z_scores{aux,o})
     colorbar
     
