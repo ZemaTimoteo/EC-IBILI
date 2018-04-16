@@ -10,14 +10,14 @@ a) p/sujeito             -  8 blocos por run ; 12 pontos por bloco
 b) p/ todos os sujeitos  -  80 blocos por run ('Decrease' + 'Increase') ; 12 pontos por bloco
 
 Caso b):
-tarefa 1 NF_BEF_DEC   -  VOIS antes de NF  -  1run  -  960 time points (  80 blocos 'Decrease')
-tarefa 1 NF_BEF_INC   -  VOIS antes de NF  -  1run  -  960 time points (  80 blocos 'Increase') 
+1 - tarefa 1 NF_BEF_DEC   -  VOIS antes de NF  -  1run  -  960 time points (  80 blocos 'Decrease')
+2 - tarefa 1 NF_BEF_INC   -  VOIS antes de NF  -  1run  -  960 time points (  80 blocos 'Increase') 
 
-tarefa 2 NF_DEC       -  VOIS durante NF   -  3runs - 2880 time points ( 240 blocos 'Decrease')
-tarefa 2 NF_INC       -  VOIS durante NF   -  3runs - 2880 time points ( 240 blocos 'Increase')
+5 - tarefa 2 NF_DEC       -  VOIS durante NF   -  3runs - 2880 time points ( 240 blocos 'Decrease')
+6 - tarefa 2 NF_INC       -  VOIS durante NF   -  3runs - 2880 time points ( 240 blocos 'Increase')
 
-tarefa 3 NF_AFTER_DEC -  VOIS depois de NF -  1run  -  960 time points (  80 blocos 'Decrease')
-tarefa 3 NF_AFTER_INC -  VOIS depois de NF -  1run  -  960 time points (  80 blocos 'Increase') 
+3 - tarefa 3 NF_AFTER_DEC -  VOIS depois de NF -  1run  -  960 time points (  80 blocos 'Decrease')
+4 - tarefa 3 NF_AFTER_INC -  VOIS depois de NF -  1run  -  960 time points (  80 blocos 'Increase') 
 
 ------------------------------------------------------------
 -> As questões seriam : (possíveis hipóteses: numero de blocos x número de pontos __ número de VOIs)

@@ -23,7 +23,10 @@ set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
 % [data.filename,data.pathname,data.filterindex] = uigetfile({'*.*'},'Choose signal to analyse');
 % path = fullfile(data.pathname , data.filename);
 % data = [importdata(path)];
-data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
+% meu computador
+% data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
+% computador IBILI
+data = load('J:\IBILI\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
 
 %% ... Choose ROIS & GeoLocalization coordinates of ROIS...
 
@@ -61,7 +64,7 @@ test.Data = {dat.(['cond',num2str(answer{1})]) , dat.(['cond',num2str(answer{2})
 clear definput dims title prompt
 
 %% cicle for multiple shuffle
-numberSHUF    = 50;
+numberSHUF    = 50;                                 % number of Shuffles
 initialiDiago = nan(nodes,1)';
 aux = 1; signifResults{aux} = diag(initialiDiago);
 aux = 2; signifResults{aux} = diag(initialiDiago);
@@ -224,11 +227,19 @@ end
 %% ... Plots ...
 
 % cd('C:\Users\tiago\Documents\MATLAB\EC-IBILI')
+aux = 1;
 set(0,'DefaultFigureVisible','on');  % all subsequent figures "off"
 plot_testMultiShuffle
 
 
 %% ... Head ROIS plot ...
+% condition 1
+aux = 1;
+drawConnect_testMultiShuffle
+
+% condition 2
+aux = 2;
+drawConnect_testMultiShuffle
 
 
 %% ... Save ...
