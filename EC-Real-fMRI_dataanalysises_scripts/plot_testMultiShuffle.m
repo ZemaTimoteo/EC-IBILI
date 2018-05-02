@@ -24,7 +24,7 @@ for o=1:2
     imagesc (signifResults{1,o})
     colorbar
     
-    title(strcat('Data Partition-',string(o)))
+    title(strcat('Conditon: . ',dat.nameCondit{str2num(answer{o})}))
     axis('square');
     ylabel('VOIs'); xlabel('VOIs');
     set(gca,'YTick',[0:0.5:9]);set(gca,'XTick',[0:0.5:9])
@@ -35,8 +35,8 @@ for o=1:2
 end
 
 
-titleP = strcat('Statistical Validation of Connectivity for Condition: . ',dat.nameCondit{str2num(answer{aux})});
-p=mtit(titleP,'fontsize',30,'color',[0 0 0],'xoff',0.05,'yoff',-.12);
-set(p.th,'edgecolor',.5*[1 1 1]);
+% titleP = strcat('Statistical Validation of Connectivity for Condition: ',dat.nameCondit{str2num(answer{1})},' and Condition: .',dat.nameCondit{str2num(answer{2})});
+% p=mtit(titleP,'fontsize',30,'color',[0 0 0],'xoff',0.05,'yoff',-.12);
+% set(p.th,'edgecolor',.5*[1 1 1]);
 
 clear titleP j o nodesNames auxNames ax p aux

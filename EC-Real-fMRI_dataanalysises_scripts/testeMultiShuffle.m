@@ -5,7 +5,7 @@
 close all
 clc
 clear
-   
+
 tic
 
 set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
@@ -26,11 +26,11 @@ set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
 % meu computador
 % data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
 % computador IBILI
-data = load('J:\IBILI\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
+data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-nosmoothing-data.mat');
 
 %% ... Choose ROIS & GeoLocalization coordinates of ROIS...
 
-ROIS_choice     = [1:4];
+ROIS_choice     = [1:4 9:10];
 nodes           = size(ROIS_choice,2);
 dat.VOISInterst = data.VOIS(ROIS_choice);
 dat.VOISGeoLoc  = data.VOISGeoLoc(ROIS_choice,:);
@@ -64,7 +64,7 @@ test.Data = {dat.(['cond',num2str(answer{1})]) , dat.(['cond',num2str(answer{2})
 clear definput dims title prompt
 
 %% cicle for multiple shuffle
-numberSHUF    = 50;                                 % number of Shuffles
+numberSHUF    = 200;                                 % number of Shuffles
 initialiDiago = nan(nodes,1)';
 aux = 1; signifResults{aux} = diag(initialiDiago);
 aux = 2; signifResults{aux} = diag(initialiDiago);
@@ -227,7 +227,6 @@ end
 %% ... Plots ...
 
 % cd('C:\Users\tiago\Documents\MATLAB\EC-IBILI')
-aux = 1;
 set(0,'DefaultFigureVisible','on');  % all subsequent figures "off"
 plot_testMultiShuffle
 
