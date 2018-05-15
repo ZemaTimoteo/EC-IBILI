@@ -10,7 +10,7 @@ FWE       = 'true';                 % Perform FWE - 'true' or 'false'
 nhyp      = nodes*nodes - nodes;    % number of hypothesis
 alpha     = 0.05;
 mth       = 'none';                  % FWE method - 'bonf' Bonferroni, - 'FDR' FDR, - 'none' no FWE correction
-plots     = 1;
+plots     = 0;
 %% ... Statistical testing ...
 
 if strcmp(tRev,'1')
@@ -36,7 +36,7 @@ if strcmp(tRev,'2')
     
     % ... Family-wise Errors correction ...
     if strcmp(mth,'FDR') % FDR
-        [h,alpha1] = fdr_bh_ECt(p,0.05,true);
+        [h,alpha1] = fdr_bh_ECt(p,alpha,true);
         stats.tstat = stats.tstat .* h;
         
         % Convert z-scores
@@ -76,7 +76,9 @@ if strcmp(tRev,'2')
         
         z = @(p) -sqrt(2) * erfcinv(p*2);
         cval = z(1-alpha); % critical value - z-value corrected for FWE
-        z_scor(find(abs(z_scor)<cval)) = 0;
+%         z_scor(find(abs(z_scor)<cval)) = 0; % elimina os valores abaixo do limiar Critical Value
+        HighCritVal = zeros(nodes);
+        HighCritVal(find(abs(z_scor)>cval)) = 1;
         
         clear mu sigma prob cval
     end
@@ -92,8 +94,8 @@ if strcmp(tRev,'2')
     end
     
     % ... save z-scores ...
-    Results.z_scores{aux,v} = abs(z_scor);
-    
+    Results.z_scores{aux,v}    = abs(z_scor);
+    Results.HighCritVal{aux,v} = HighCritVal;
 end
 
 test.stat.tRev      = tRev;                 % '1' - only the MVGC statistics, '2' - only the paired t-test, 'both' - both tests

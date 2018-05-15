@@ -25,12 +25,14 @@ set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
 % data = [importdata(path)];
 % meu computador
 % data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-data_vf.mat');
-% computador IBILI
-data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-nosmoothing-data.mat');
+% meu computador
+% data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois-nosmoothing-data.mat');
+data = load('C:\Users\tiago\Documents\MATLAB\EC-IBILI\JP_EC_Data_&_Results\vois_shiftedtimecourse.mat');
+
 
 %% ... Choose ROIS & GeoLocalization coordinates of ROIS...
 
-ROIS_choice     = [1:4 9:10];
+ROIS_choice     = [1:4];
 nodes           = size(ROIS_choice,2);
 dat.VOISInterst = data.VOIS(ROIS_choice);
 dat.VOISGeoLoc  = data.VOISGeoLoc(ROIS_choice,:);
@@ -49,6 +51,18 @@ end
 
 clear data i cond numberFields ROIS_choice
 
+%% ... Demean data ...
+auxMean = [dat.cond1 dat.cond2 dat.cond3 dat.cond4 dat.cond5 dat.cond6];
+meanAllCond = mean(auxMean,2);
+
+% dat.cond1 = dat.cond1 - meanAllCond;
+% dat.cond2 = dat.cond2 - meanAllCond;
+% dat.cond3 = dat.cond3 - meanAllCond;
+% dat.cond4 = dat.cond4 - meanAllCond;
+% dat.cond5 = dat.cond5 - meanAllCond;
+% dat.cond6 = dat.cond6 - meanAllCond;
+
+% clear meanAllCond 
 
 %% ... Choose Conditions ...
 
@@ -64,79 +78,175 @@ test.Data = {dat.(['cond',num2str(answer{1})]) , dat.(['cond',num2str(answer{2})
 clear definput dims title prompt
 
 %% cicle for multiple shuffle
-numberSHUF    = 200;                                 % number of Shuffles
+numberSHUF = 200;   % number of Shuffles
+typeOfTest = 'MT';  % ST - single trial analyses, MT - multiple trial analyses
+
 initialiDiago = nan(nodes,1)';
-aux = 1; signifResults{aux} = diag(initialiDiago);
-aux = 2; signifResults{aux} = diag(initialiDiago);
+
+aux = 1;
+Z_scoreAllMat{aux} = diag(initialiDiago); 
+SignifBinary{aux}  = diag(initialiDiago); 
+% signifResults{aux} = diag(initialiDiago); 
+aux = 2;
+Z_scoreAllMat{aux} = diag(initialiDiago); 
+SignifBinary{aux}  = diag(initialiDiago); 
+% signifResults{aux} = diag(initialiDiago); 
 
 clear initialiDiago aux
 
 for pp=1:numberSHUF
+
     fprintf('\n\n\n   ===================-------------------================  ');
-    fprintf('\n   ===================----shuffle %d-----================   ', pp);
+    fprintf('\n   ===================--- shuffle %d -----================   ', pp);
     fprintf('\n   ===================-------------------================   \n\n');
 
     %% ... reorganization of the data ...
     DataTest{1} = test.Data{1};
     DataTest{2} = test.Data{2};
     
-    if length(DataTest{1}) == 960
-        % Data condition 1
-        % - randomize subjects
-        DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),96,10]);
-        [~,~,s] = size(DataTest{1});
-        test.shuffl{pp}  = randperm(s) ;
-        DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
-        DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),960,1]);
-        % - rearrangement of data
-        test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),48,20]);
-        
-        % Data condition 2
-        % - randomize subjects
-        DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),96,10]);
-        DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
-        DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),960,1]);
-        % rearrangement of data
-        test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),48,20]);
-        
-    elseif length(DataTest{1}) == 2880
-        % Data condition 1
-        % - randomize subjects
-        DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),288,10]);
-        [~,~,s] = size(DataTest{1});
-        test.shuffl{pp}  = randperm(s) ;
-        DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
-        DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),2880,1]);
-        
-        % - rearrangement of data
-        a = DataTest{1}(:,1:1152);
-        b = DataTest{1}(:,1152+1:1152+864);
-        c = DataTest{1}(:,1152+864+1:1152+864+864);
-        
-        test.rshapData{1,1} = reshape(a,[size(DataTest{1},1),48,24]);
-        test.rshapData{1,2} = reshape(b,[size(DataTest{1},1),36,24]);
-        test.rshapData{1,3} = reshape(c,[size(DataTest{1},1),36,24]);
-        
-        % Data condition 2
-        % - randomize subjects
-        DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),288,10]);
-        DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
-        DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),2880,1]);
-        
-        
-        % - rearrangement of data
-        aa = DataTest{2}(:,1:1152);
-        bb = DataTest{2}(:,1152+1:1152+864);
-        cc = DataTest{2}(:,1152+864+1:1152+864+864);
-        
-        test.rshapData{2,1} = reshape(aa,[size(DataTest{2},1),48,24]);
-        test.rshapData{2,2} = reshape(bb,[size(DataTest{2},1),36,24]);
-        test.rshapData{2,3} = reshape(cc,[size(DataTest{2},1),36,24]);
+    % --- following paper - Fernandes, 2018
+    switch typeOfTest
+        case 'MT'
+            
+            % -------------- cond 1, 2, 3 e 4 ----------
+            if length(DataTest{1}) == 960
+                % Data condition 1
+                % - randomize subjects
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),12,80]);
+                [~,~,s] = size(DataTest{1});
+                test.shuffl{pp}  = randperm(s) ;
+                DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),960,1]);
+                % - rearrangement of data
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),48,20]);
+                
+                % Data condition 2
+                % - randomize subjects
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),12,80]);
+                DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),960,1]);
+                % rearrangement of data
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),48,20]);
+                
+            elseif length(DataTest{1}) == 1600
+                % Data condition 1
+                % - randomize subjects
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),20,80]);
+                [~,~,s] = size(DataTest{1});
+                test.shuffl{pp}  = randperm(s) ;
+                DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),1600,1]);
+                % - rearrangement of data
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),80,20]);
+                
+                % Data condition 2
+                % - randomize subjects
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),20,80]);
+                DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),1600,1]);
+                % rearrangement of data
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),80,20]);
+                
+                % ---------------- cond 5-6 ---------------------------
+            elseif length(DataTest{1}) == 2880
+                % Data condition 1
+                % - randomize subjects
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),12,240]);
+                [~,~,s] = size(DataTest{1});
+                test.shuffl{pp}  = randperm(s) ;
+                DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),2880,1]);
+                
+                % - rearrangement of data
+                a = DataTest{1}(:,1:1152);
+                b = DataTest{1}(:,1152+1:1152+864);
+                c = DataTest{1}(:,1152+864+1:1152+864+864);
+                
+                test.rshapData{1,1} = reshape(a,[size(DataTest{1},1),48,24]);
+                test.rshapData{1,2} = reshape(b,[size(DataTest{1},1),36,24]);
+                test.rshapData{1,3} = reshape(c,[size(DataTest{1},1),36,24]);
+                
+                % Data condition 2
+                % - randomize subjects
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),12,240]);
+                DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),2880,1]);
+                
+                
+                % - rearrangement of data
+                aa = DataTest{2}(:,1:1152);
+                bb = DataTest{2}(:,1152+1:1152+864);
+                cc = DataTest{2}(:,1152+864+1:1152+864+864);
+                
+                test.rshapData{2,1} = reshape(aa,[size(DataTest{2},1),48,24]);
+                test.rshapData{2,2} = reshape(bb,[size(DataTest{2},1),36,24]);
+                test.rshapData{2,3} = reshape(cc,[size(DataTest{2},1),36,24]);
+                
+            elseif length(DataTest{1}) == 4800
+                % Data condition 1
+                % - randomize subjects
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),20,240]);
+                [~,~,s] = size(DataTest{1});
+                test.shuffl{pp}  = randperm(s) ;
+                DataTest{1}(:,:,test.shuffl{pp}) = DataTest{1}(:,:,:);
+                DataTest{1} = reshape(DataTest{1},[size(DataTest{1},1),4800,1]);
+                
+                % - rearrangement of data
+                a = DataTest{1}(:,1:1920);
+                b = DataTest{1}(:,1920+1:1920+1440);
+                c = DataTest{1}(:,1920+1440+1:1920+1440+1440);
+                
+                test.rshapData{1,1} = reshape(a,[size(DataTest{1},1),80,24]);
+                test.rshapData{1,2} = reshape(b,[size(DataTest{1},1),60,24]);
+                test.rshapData{1,3} = reshape(c,[size(DataTest{1},1),60,24]);
+                
+                % Data condition 2
+                % - randomize subjects
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),20,240]);
+                DataTest{2}(:,:,test.shuffl{pp}) = DataTest{2}(:,:,:);
+                DataTest{2} = reshape(DataTest{2},[size(DataTest{2},1),4800,1]);
+                
+                
+                % - rearrangement of data
+                aa = DataTest{2}(:,1:1920);
+                bb = DataTest{2}(:,1920+1:1920+1440);
+                cc = DataTest{2}(:,1920+1440+1:1920+1440+1440);
+                
+                test.rshapData{2,1} = reshape(aa,[size(DataTest{2},1),80,24]);
+                test.rshapData{2,2} = reshape(bb,[size(DataTest{2},1),60,24]);
+                test.rshapData{2,3} = reshape(cc,[size(DataTest{2},1),60,24]);
+            end
+            
+            clear a aa b bb c cc s ss
+            %     test = rmfield(test,{'Data'});
+            
+            % --- follwing simple subject trial
+        case'ST'
+            
+            % -------------- cond 1, 2, 3 e 4 ----------
+            if length(DataTest{1}) == 960
+                % Data condition 1 & 2
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),12,80]);
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),12,80]);
+                
+            elseif length(DataTest{1}) == 1600
+                % Data condition 1 & 2
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),20,80]);
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),20,80]);
+                
+                % -------------- cond 5 e 6 ---------------
+            elseif length(DataTest{1}) == 2880
+                % Data condition 1 % 2
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),12,240]);
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),12,240]);
+                
+            elseif length(DataTest{1}) == 4800
+                % Data condition 1 % 2
+                test.rshapData{1,1} = reshape(DataTest{1},[size(DataTest{1},1),20,240]);
+                test.rshapData{2,1} = reshape(DataTest{2},[size(DataTest{2},1),20,240]);
+                
+            end
     end
-    
-    clear a aa b bb c cc s ss
-%     test = rmfield(test,{'Data'});
-    
     
     %% ... Performing SSGC ...
     
@@ -203,9 +313,10 @@ for pp=1:numberSHUF
         clear aux
         
     end
-    dat.mordermax        = mordermax;         % max model order
-    Multiple_Zscores{pp} = Results.z_scores;  % Storage of Zscores
-    
+    dat.mordermax        = mordermax;           % max model order
+    Multiple_Zscores{pp} = Results.z_scores;    % Storage of Zscores
+    BinarySignif{pp}     = Results.HighCritVal; % Storage of Binary significant z_scores
+
     clear moAIC moBIC morder mordermax i u v cat_G_AllSubs cat_G_AllSubs_sur ci alpha1 sigma stats z ...
         z_scor prob p mu j infinit h ci blo ans diagonal cval
     
@@ -213,16 +324,57 @@ for pp=1:numberSHUF
 %% ... Distribution of significancy ...  
     for ii=1:numberTests
         aux = 1;
-        conectIndex                     = find(Multiple_Zscores{1,pp}{aux,ii}>0);
-        signifResults{aux}(conectIndex) = signifResults{aux}(conectIndex)+Multiple_Zscores{1,pp}{aux,ii}(conectIndex); % add significative values to matrix of condition1
-        
+%         conectIndex                     = find(Multiple_Zscores{1,pp}{aux,ii}>0);
+%         signifResults{aux}(conectIndex) = signifResults{aux}(conectIndex) + ...
+%                                 Multiple_Zscores{1,pp}{aux,ii}(conectIndex); % add significative values to matrix of condition1
+        Z_scoreAllMat{aux}              = Z_scoreAllMat{aux} + Multiple_Zscores{1,pp}{aux,ii}; % add z_score values to matrix of condition1
+        conectIndex                     = find(BinarySignif{1,pp}{aux,ii}>0);
+        SignifBinary{aux}(conectIndex)  = SignifBinary{aux}(conectIndex) + ...
+                                BinarySignif{1,pp}{aux,ii}(conectIndex); % add z_score values to matrix of condition1                            
+
         aux = 2;
-        conectIndex                     = find(Multiple_Zscores{1,pp}{aux,ii}>0);
-        signifResults{aux}(conectIndex) = signifResults{aux}(conectIndex)+Multiple_Zscores{1,pp}{aux,ii}(conectIndex); % add significative values to matrix of condition2
+%         conectIndex                     = find(Multiple_Zscores{1,pp}{aux,ii}>0);
+%         signifResults{aux}(conectIndex) = signifResults{aux}(conectIndex) + ...
+%                                 Multiple_Zscores{1,pp}{aux,ii}(conectIndex); % add significative values to matrix of condition2
+        Z_scoreAllMat{aux}              = Z_scoreAllMat{aux} + Multiple_Zscores{1,pp}{aux,ii}; % add z_score values to matrix of condition1
+        conectIndex                     = find(BinarySignif{1,pp}{aux,ii}>0);
+        SignifBinary{aux}(conectIndex)  = SignifBinary{aux}(conectIndex) + ...
+                                BinarySignif{1,pp}{aux,ii}(conectIndex); % ad
     end
     
     clear aux conectIndex
 end
+
+%% ... statistical measures of Permutations (Standart Deviantion & Mean) ...
+
+% save sum variables
+MTResults.Z_scoreAllMat = Z_scoreAllMat;
+MTResults.SignifBinary = SignifBinary;
+
+for ii=1:numberTests
+    % condition 1
+    aux = 1;
+    auxMult_Zscores = zeros(nodes,nodes,pp);
+    for j=1:pp
+        auxMult_Zscores(:,:,j) = Multiple_Zscores{1,j}{aux,ii};
+    end
+    MTResults.S{aux} = std(auxMult_Zscores,0,3);          % standart deviation
+    MTResults.M{aux} = MTResults.Z_scoreAllMat{1,aux}/pp; % mean
+    clear auxMultZscores
+    
+    % condition 2
+    aux = 2;
+    auxMult_Zscores = zeros(nodes,nodes,pp);
+    for j=1:pp
+        auxMult_Zscores(:,:,j) = Multiple_Zscores{1,j}{aux,ii};
+    end
+    MTResults.S{aux} = std(auxMult_Zscores,0,3);          % standart deviation
+    MTResults.M{aux} = MTResults.Z_scoreAllMat{1,aux}/pp; % mean
+    
+    clear auxMultZscores
+end
+
+% clear SignifBinary Z_scoreAllMat BinarySignif Multiple_Zscores
 
 %% ... Plots ...
 
@@ -232,14 +384,14 @@ plot_testMultiShuffle
 
 
 %% ... Head ROIS plot ...
-% condition 1
-aux = 1;
-drawConnect_testMultiShuffle
-
-% condition 2
-aux = 2;
-drawConnect_testMultiShuffle
-
+% % % % % condition 1
+% % % % aux = 1;
+% % % % drawConnect_testMultiShuffle
+% % % % 
+% % % % % condition 2
+% % % % aux = 2;
+% % % % drawConnect_testMultiShuffle
+% % % % 
 
 %% ... Save ...
 

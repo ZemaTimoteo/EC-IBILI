@@ -12,7 +12,7 @@ for blo = 1:nblocks
     % ... condicao de que deu erro ao realizar o SSGC ...
     if isnan(Results.G_AllSubs_FDR{aux,u}(2,1,blo)) | Results.G_AllSubs_FDR{aux,u}(2,1,blo) == 0
         stop = 'true';
-        z_scores.(cond_names{cond}) = zeros(nvars);
+        Results.G_AllSubs_FDR_sur{aux,u}(:,:,blo) = zeros(nodes);
         continue
     end
     
@@ -52,10 +52,5 @@ for blo = 1:nblocks
     
     
 end
-
-
-
-
-
 
 
