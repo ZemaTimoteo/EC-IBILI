@@ -30,7 +30,7 @@ pf = 2*moAIC; morder = moAIC; % when using AIC
 outputs.morder = morder;
 %     morder    = 3;%moBIC;
 
-%% Build state-space
+%% Build linear state-space
 
 outputs.failSSGC_build = 0;
 i_failSS = [];
@@ -44,6 +44,10 @@ ii = [];
 % catch ME
 %     fprintf(' - Failed to build SS in block %d', trial);
 % end
+
+
+%% Build nonlinear state-space
+
 
 %%  Consistency statistics
 outputs.cons = consistency(X,outputs.V);
