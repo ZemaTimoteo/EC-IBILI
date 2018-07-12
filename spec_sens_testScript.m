@@ -11,16 +11,16 @@ tic
 set(0,'DefaultFigureVisible','off');  % all subsequent figures "off"
 
 %% ... Inicializacao ...
-pointsVect  = [10 20 30 40 60 80 100 160 200] + 50; % 60 80 100 160 200]+50; % + 50 para excluir os primeiro 50 pontos afectados pela HRF [3000]; % [10 20 30 40 60 80 100 160 200]; % [40 80]; % [40:5:80]; % 
-blocksVect  = [ 2  4 8 13 15 17  25  30  40]; %  [ 20]; % [ 2  4  8 13 15 17  25  30  40]; % [4 25]; % 40; %
-test        = 1;             % 1 - MVGC, 3 - SSGC, 4 - Coherence
-surrogate   = 'perm';   % 'timeRev' - for time-reversed, 'perm' - for permutation, 'permBlock' - for permutation by blocks
+pointsVect  = [ 160 ]+50; %[10 20 30 40 60 80 100 160 200] + 50; % 60 80 100 160 200]+50; % + 50 para excluir os primeiro 50 pontos afectados pela HRF [3000]; % [10 20 30 40 60 80 100 160 200]; % [40 80]; % [40:5:80]; % 
+blocksVect  = [ 25]; %[ 2  4 8 13 15 17  25  30  40]; %  [ 20]; % [ 2  4  8 13 15 17  25  30  40]; % [4 25]; % 40; %
+test        = 3;             % 1 - MVGC, 3 - SSGC, 4 - Coherence
+surrogate   = 'timeRev';   % 'timeRev' - for time-reversed, 'perm' - for permutation, 'permBlock' - for permutation by blocks
 var         = 5;             % Number of Variables - '5' or '9'
 varComplex  = 15;             % LowCorr '1' - true; HighCorr '0' - false
 simul       = 'true';
 
 consistTest = 'true';       % if consistentency test on: 'true'
-ratioSNR    = 1000;          % Value of SNR
+ratioSNR    = 1;          % Value of SNR Low - '1'; Medium - '200'; High - '1000'
 plots       = 0;            % 1 - 'true', 0 ou 2 - 'false'
 cond_names  = {'simulate05','simulate250','simulateOriginal'};
 n_cond      = 3;
