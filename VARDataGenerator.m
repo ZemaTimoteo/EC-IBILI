@@ -427,8 +427,6 @@ if test == 3 % SSGC trials
 end
 
 
-%% Build state-space
-
 
 %% Coherence
 if test == 4

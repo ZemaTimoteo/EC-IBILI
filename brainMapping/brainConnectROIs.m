@@ -1,4 +1,15 @@
 function [hf] = brainConnectROIs(coord, regionTag, roiSize, connStrength, showLabels, printBrain, direction )
+% 
+% 
+% Input variables
+%   coord               - Coordenates
+%   regionTag           - Name of the ROIs
+%   roiSize             - Size of the dot that mark the ROIs
+%   connStrength        - Array [connection by connection and strength of connection
+%   showLabels          - brain labels
+%   printBrain          - title for the figure
+%   direction           -
+% 
 
 %% VarIn and presets
 
